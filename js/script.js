@@ -15,8 +15,19 @@ const displayPhones = (phones) => {
     const phonesContainer = document.getElementById('phones-container')
     phonesContainer.textContent = ''
 
+    console.log(phones.length)
 
 
+        // show all (btn display if there are moere then 12 phones and hide btn if less)
+    const showALLBtn = document.getElementById('show-all-btn')
+    if(phones.length> 10){
+        console.log('moren tahe 10')
+        showALLBtn.classList.remove('hidden')
+    }else{
+        showALLBtn.classList.add('hidden')
+    }
+
+    // display only 12 phones
     phones = phones.slice(0,12)
 
 
