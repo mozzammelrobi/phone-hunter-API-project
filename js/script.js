@@ -10,15 +10,14 @@ const loadPnone = async (searchText) => {
 
 
 const displayPhones = (phones) => {
-    console.log(phones)
-    // toggleLoading(flase)
+    // console.log(phones)
 
     const phonesContainer = document.getElementById('phones-container')
     phonesContainer.textContent = ''
 
 
 
-    phones = phones.slice(0,5)
+    phones = phones.slice(0,12)
 
 
     phones.forEach((phone) => {
@@ -33,7 +32,7 @@ const displayPhones = (phones) => {
           <h2 class="card-title">${phone.phone_name}</h2>
           <p>If a dog chews shoes whose shoes does he choose?</p>
           <div class=" flex ">
-            <button class="btn btn-primary">Show Details</button>
+            <button onclick="showDetails('${phone.slug}')" class="btn btn-primary">Show Details</button>
           </div>
         </div>
         `;
@@ -58,8 +57,39 @@ const toggleLoading = (isLoading) =>{
         loading.classList.remove('hidden')
     }else{
         loading.classList.add('hidden')
-    }
-    
+    }  
 }
 
+
+
+const showDetails = async (id) => {
+    const res =await fetch (`https://openapi.programming-hero.com/api/phone/${id}`);
+    const datas = await res.json()
+    const data = datas.data
+    // console.log(data)
+    // // console.log('show details button click',id)
+    showsinglePhoneDetails(data)
+}
+
+
+const showsinglePhoneDetails =(phone) => {
+    console.log(phone)
+
+    const phoneDetailsContainer = document.getElementById('phone-details-container')
+    phoneDetailsContainer.innerHTML = `
+    <img src="${phone.image}" alt="">
+    <h3 id="detail-phone-name" class="font-bold text-lg">${phone.name}</h3>
+   
+    <p><span class="font-bold">storage:</span>${phone.mainFeatures.storage}</p>
+    <p><span class="font-bold">Display Size:</span>${phone.mainFeatures.displaySize}</p>
+    <p><span class="font-bold">Memory:</span></p>
+    <p><span class="font-bold">Release date:</span> ${phone.releaseDate}</p>
+    <p><span class="font-bold">GPS:</span> ${phone.others?.GPS}</p>
+    `
+
+
+
+    show_modal_by_click.showModal()
+}
+// showDetails()
 loadPnone('iphone')
