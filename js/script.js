@@ -1,5 +1,6 @@
-const loadPnone = async () => {
-    const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=iphone`);
+const loadPnone = async (searchText) => {
+    toggleLoading(true)
+    const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchText}`);
     const data = await res.json()
     const phones = data.data
     // console.log(phones)
@@ -10,14 +11,20 @@ const loadPnone = async () => {
 
 const displayPhones = (phones) => {
     console.log(phones)
+    // toggleLoading(flase)
 
     const phonesContainer = document.getElementById('phones-container')
+    phonesContainer.textContent = ''
 
 
-    phones.forEach((phone) =>{
-        console.log(phone)
+
+    phones = phones.slice(0,5)
+
+
+    phones.forEach((phone) => {
+        // console.log(phone)
         const phoneCard = document.createElement('div')
-  
+
         phoneCard.classList = 'card card-compact bg-base-100 shadow-xl p-3'
 
         phoneCard.innerHTML = ` 
@@ -32,6 +39,27 @@ const displayPhones = (phones) => {
         `;
         phonesContainer.appendChild(phoneCard)
     })
+    toggleLoading(false)
 }
 
-loadPnone()
+
+
+const handleSearch = () => {
+    const searchInputField = document.getElementById('search-input-field')
+    const searchText = searchInputField.value;
+
+    loadPnone(searchText)
+}
+
+
+const toggleLoading = (isLoading) =>{
+    const loading = document.getElementById('loading')
+    if(isLoading){
+        loading.classList.remove('hidden')
+    }else{
+        loading.classList.add('hidden')
+    }
+    
+}
+
+loadPnone('iphone')
