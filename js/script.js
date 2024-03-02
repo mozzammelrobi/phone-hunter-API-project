@@ -1,34 +1,37 @@
-const loadPnone = async (searchText) => {
+const loadPnone = async (searchText, isShowAll) => {
     toggleLoading(true)
     const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchText}`);
     const data = await res.json()
     const phones = data.data
     // console.log(phones)
-    displayPhones(phones)
+    displayPhones(phones,isShowAll)
 }
 
 
 
-const displayPhones = (phones) => {
+const displayPhones = (phones,isShowAll) => {
     // console.log(phones)
 
     const phonesContainer = document.getElementById('phones-container')
     phonesContainer.textContent = ''
 
-    console.log(phones.length)
+    // console.log(phones.length)
 
 
         // show all (btn display if there are moere then 12 phones and hide btn if less)
     const showALLBtn = document.getElementById('show-all-btn')
-    if(phones.length> 10){
-        console.log('moren tahe 10')
+    if(phones.length> 10 && !isShowAll){
         showALLBtn.classList.remove('hidden')
     }else{
         showALLBtn.classList.add('hidden')
     }
 
-    // display only 12 phones
-    phones = phones.slice(0,12)
+
+    console.log('is show all', isShowAll)
+    // display only 12 phones if not show all 
+    if(!isShowAll){
+        phones = phones.slice(0,12)
+    }
 
 
     phones.forEach((phone) => {
@@ -54,11 +57,11 @@ const displayPhones = (phones) => {
 
 
 
-const handleSearch = () => {
+const handleSearch = (isShowAll) => {
     const searchInputField = document.getElementById('search-input-field')
     const searchText = searchInputField.value;
 
-    loadPnone(searchText)
+    loadPnone(searchText, isShowAll)
 }
 
 
@@ -90,17 +93,22 @@ const showsinglePhoneDetails =(phone) => {
     phoneDetailsContainer.innerHTML = `
     <img src="${phone.image}" alt="">
     <h3 id="detail-phone-name" class="font-bold text-lg">${phone.name}</h3>
-   
     <p><span class="font-bold">storage:</span>${phone.mainFeatures.storage}</p>
     <p><span class="font-bold">Display Size:</span>${phone.mainFeatures.displaySize}</p>
     <p><span class="font-bold">Memory:</span></p>
     <p><span class="font-bold">Release date:</span> ${phone.releaseDate}</p>
     <p><span class="font-bold">GPS:</span> ${phone.others?.GPS}</p>
-    `
-
-
+    `;
 
     show_modal_by_click.showModal()
 }
+
+const showAllPhoneBtn = () =>{
+    // console.log('show all btn click')
+    handleSearch(true)
+}
+
+
+
 // showDetails()
 loadPnone('iphone')
